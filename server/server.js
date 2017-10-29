@@ -6,7 +6,7 @@ import session from 'express-session';
 import passport from 'passport';
 import path from 'path';
 import mongoose from 'mongoose';
-//import cors from 'cors';
+import cors from 'cors';
 import configure from './configure';
 
 // 서버사이드 ajax를 위한 fetch
@@ -43,9 +43,9 @@ db.once('open', () => {
 // 정적 파일 라우트
 app.use('/', express.static(path.join(__dirname, './../public')));
 
-//const whitelist = ['http://localhost:3000', 'http://localhost'];
+const whitelist = ['http://localhost:3000', 'http://localhost'];
 
-/*
+
 const corsOptions = {
   origin(origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
@@ -58,7 +58,27 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-*/
+
+app.post('/auth/login', (req, res) => {
+  return res.json({
+    data: {
+      username: 'username',
+      name: 'name',
+      level: '관리자',
+      shop: 'tempshop',
+    },
+  });
+});
+app.get('/auth', (req, res) => {
+  return res.json({
+    data: {
+      username: 'username',
+      name: 'name',
+      level: '관리자',
+      shop: 'tempshop',
+    },
+  });
+});
 
 // 쿠키 사용
 app.use(cookieParser());

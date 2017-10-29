@@ -28,6 +28,10 @@ var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
+var _cors = require('cors');
+
+var _cors2 = _interopRequireDefault(_cors);
+
 var _configure = require('./configure');
 
 var _configure2 = _interopRequireDefault(_configure);
@@ -54,8 +58,6 @@ var app = (0, _express2.default)();
 
 // api 라우트 로드
 
-//import cors from 'cors';
-
 var port = _configure2.default.PORT;
 
 // 몽고디비 연결 설정
@@ -76,22 +78,42 @@ db.once('open', function () {
 // 정적 파일 라우트
 app.use('/', _express2.default.static(_path2.default.join(__dirname, './../public')));
 
-//const whitelist = ['http://localhost:3000', 'http://localhost'];
+var whitelist = ['http://localhost:3000', 'http://localhost'];
 
-/*
-const corsOptions = {
-  origin(origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
+var corsOptions = {
+  origin: function origin(_origin, callback) {
+    if (whitelist.indexOf(_origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true,
+
+  credentials: true
 };
 
-app.use(cors(corsOptions));
-*/
+app.use((0, _cors2.default)(corsOptions));
+
+app.post('/auth/login', function (req, res) {
+  return res.json({
+    data: {
+      username: 'username',
+      name: 'name',
+      level: '관리자',
+      shop: 'tempshop'
+    }
+  });
+});
+app.get('/auth', function (req, res) {
+  return res.json({
+    data: {
+      username: 'username',
+      name: 'name',
+      level: '관리자',
+      shop: 'tempshop'
+    }
+  });
+});
 
 // 쿠키 사용
 app.use((0, _cookieParser2.default)());
