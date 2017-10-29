@@ -78,7 +78,7 @@ db.once('open', function () {
 // 정적 파일 라우트
 app.use('/', _express2.default.static(_path2.default.join(__dirname, './../public')));
 
-var whitelist = ['http://localhost:3000', 'http://localhost'];
+var whitelist = ['http://localhost:3000', 'http://localhost', 'http://172.30.1.32:3000'];
 
 var corsOptions = {
   origin: function origin(_origin, callback) {
@@ -92,7 +92,7 @@ var corsOptions = {
   credentials: true
 };
 
-app.use((0, _cors2.default)(corsOptions));
+app.use((0, _cors2.default)());
 
 app.post('/auth/login', function (req, res) {
   return res.json({

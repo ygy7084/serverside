@@ -43,7 +43,7 @@ db.once('open', () => {
 // 정적 파일 라우트
 app.use('/', express.static(path.join(__dirname, './../public')));
 
-const whitelist = ['http://localhost:3000', 'http://localhost'];
+const whitelist = ['http://localhost:3000', 'http://localhost', 'http://172.30.1.32:3000'];
 
 
 const corsOptions = {
@@ -57,7 +57,7 @@ const corsOptions = {
   credentials: true,
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.post('/auth/login', (req, res) => {
   return res.json({
