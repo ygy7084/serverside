@@ -17,7 +17,8 @@ var router = _express2.default.Router();
 //고객 생성
 router.post('/', function (req, res) {
   var customerTemp = {
-    phone: req.body.data.phone
+    phone: req.body.data.phone,
+    point: 0
   };
 
   var customer = new _models.Customer(customerTemp);
@@ -29,6 +30,86 @@ router.post('/', function (req, res) {
       data: result
     });
   });
+  return null;
+});
+
+router.post('/PointSave', function (req, res) {
+  //let phone = req.body.data.phone;
+  var id_check = void 0;
+  _models.Customer.findOne({ phone: req.body.data.phone }).lean().exec(function (err, result) {
+    if (err) {
+      return res.status(500).json({ message: '고객 조회 오류' });
+    }
+    console.log(result);
+    if (!result) {
+      console.log("등록된 고객이 아닙니다. 신규 등록후 포인트 적립 진행");
+      var customerTemp = {
+        phone: req.body.data.phone,
+        point: 1
+      };
+      var customer = new _models.Customer(customerTemp);
+      customer.save(function (err, resultc) {
+        if (err) {
+          return res.status(500).json({ message: '고객 생성 오류 ' });
+        }
+        console.log(resultc);
+        return res.json({
+          data: resultc
+        });
+      });
+    } else {
+      console.log('포인트 추가');
+      /*
+      const properties = [
+        'point',
+      ];
+        const update = {$set: {}};
+      for (const property of properties) {
+        if (Object.prototype.hasOwnProperty.call(req.body.data, property)) {
+          update.$set[property] = req.body.data[property] + 1;
+        }
+      }*/
+      _models.Customer.findOneAndUpdate({ phone: req.body.data.phone }, { $inc: { point: 1 } }, function (err, result) {
+        if (err) {
+          return res.status(500).json({ message: "포인트 적립 오류 " });
+        }
+        return res.json({
+          data: result
+        });
+      });
+    }
+  });
+
+  /*
+  if(!req.body.data.phone){
+    // 번호로 저장된 id가 없는경우 customer 등록 후 pointSave
+    const customerTemp = {
+      }
+    }
+  else {
+    const properties = [
+      'point',
+    ];
+      const update = {$set: {}};
+    for (const property of properties) {
+      if (Object.prototype.hasOwnProperty.call(req.body.data, property)) {
+        update.$set[property] = req.body.data[property] + 1;
+      }
+    }
+    Customer.findOneAndUpdate(
+      {phone: req.body.data.phone},
+      update,
+      (err, result) => {
+        if (err) {
+          return res.status(500).json({message: "포인트 적립 오류 "});
+        }
+        return res.json({
+          data: result,
+        });
+      },
+    );
+  }
+  */
 
   return null;
 });

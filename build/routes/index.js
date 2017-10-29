@@ -28,6 +28,10 @@ var _history = require('./history');
 
 var _history2 = _interopRequireDefault(_history);
 
+var _test = require('./test1');
+
+var _test2 = _interopRequireDefault(_test);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = _express2.default.Router();
@@ -37,5 +41,6 @@ router.use('/shop', _shop2.default);
 router.use('/customer', _customer2.default);
 router.use('/product', _product2.default);
 router.use('/history', _history2.default);
+router.use('/test1', _test2.default);
 
 exports.default = router;

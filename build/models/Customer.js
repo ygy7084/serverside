@@ -12,7 +12,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Schema = _mongoose2.default.Schema;
 var Customer = new Schema({
-  phone: String
+  phone: String,
+  name: String,
+  birth: Date,
+  memo: String,
+  point: Number
 });
 
 Customer.index({ phone: 1 }, { unique: true });

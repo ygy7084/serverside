@@ -19,7 +19,7 @@ export default function(){
       .post('/api/customer')
       .send({
         data:{
-          phone : '010-3026-1963',
+          phone : '01030261964',
         },
       })
       .end((err, res) => {
@@ -27,7 +27,7 @@ export default function(){
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.data.should.be.a('object');
-        res.body.data.should.have.property('phone').eql('010-3026-1963');
+        res.body.data.should.have.property('phone').eql('01030261964');
         //tempId = res.body.data._id;
         done();
       });
@@ -55,7 +55,7 @@ export default function(){
       .send({
         data: {
           _id : tempId,
-          phone : '010-2793-7961',
+          phone : '01030261963',
         },
       })
       .end((err, res) => {
@@ -69,6 +69,26 @@ export default function(){
       });
   });
 
+  it('should save a point for customer', (done) => {
+    chai.request(server)
+      .post('/api/customer/PointSave')
+      .send({
+        data: {
+          phone : '01030261963'
+        },
+      })
+      .end((err, res) => {
+        should.exist(res.body);
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.data.should.be.a(object);
+        res.body.data.should.have.property('point').eql(1);
+        done();
+      });
+  });
+
+
+  /*
   it('should remove a customer', (done) => {
     chai.request(server)
       .delete('/api/customer')
@@ -93,4 +113,5 @@ export default function(){
           })
       });
   })
+  */
 }
