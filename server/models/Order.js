@@ -42,7 +42,7 @@ const Order = new Schema({
       name: String,
       phone: String,
       kind: String,
-      id : {type: Schema.Types.ObjectId, ref: ''},
+      id : {type: Schema.Types.ObjectId, ref: `${this.kind}`},
       message: String,
     }
   ],

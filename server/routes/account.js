@@ -5,14 +5,24 @@ import {
 } from '../models';
 
 const router = express.Router();
-
-
+/*
+username: String,
+  password: String,
+  connectedShops: [
+  {
+    id: {type: Schema.Types.ObjectId, ref: 'shop'},
+    name: String,
+  }
+],
+  level : String,
+*/
 //계정 생성
 router.post('/', (req, res) => {
   const accountTemp = {
     username: req.body.data.username,
     password: req.body.data.password,
-    shop: req.body.data.shop,
+    connectedShops: req.body.data.connectedShops,
+    level: req.body.data.level,
   };
 
   const account = new Account(accountTemp);
@@ -28,7 +38,7 @@ router.post('/', (req, res) => {
   return null;
 });
 
-//계정 리스트 반환
+//계정 리스트 조회
 router.get('/', (req, res) => {
   Account.find({})
     .exec((err, result) => {
@@ -41,7 +51,7 @@ router.get('/', (req, res) => {
     });
 });
 
-//계정 반환
+//계정 단일 조회
 router.get('/:id', (req, res) => {
   Account.findOne({ _id: req.params.id })
     .lean()
@@ -56,14 +66,17 @@ router.get('/:id', (req, res) => {
 });
 
 //계정 수정
-router.put('/', (req, res) => {
-  if(!req.body.data._id){
+router.put('/:_id', (req, res) => {
+  if(!req.params._id){
     return res.status(500).json({ message : '계정 수정 오류: _id가 전송되지 않았습니다.'});
   }
 
   const properties = [
     'username',
     'password',
+    'connectedShops',
+    'level',
+
   ];
   const update = { $set: {} };
   for (const property of properties){
@@ -72,7 +85,7 @@ router.put('/', (req, res) => {
     }
   }
   Account.findOneAndUpdate(
-    { _id : req.body.data._id },
+    { _id : req.params._id},
     update,
     (err, result) => {
       if(err) {
@@ -87,12 +100,12 @@ router.put('/', (req, res) => {
 });
 
 //계정 삭제
-router.delete('/', (req, res) => {
-  if (!req.body.data._id) {
+router.delete('/:_id', (req, res) => {
+  if (!req.params._id) {
     return res.status(500).json({ message: '계정 삭제 오류: _id가 전송되지 않았습니다.' });
   }
   Account.findOneAndRemove(
-    { _id: req.body.data._id },
+    { _id: req.params._id },
     (err, result) =>
       res.json({
         data: result,
@@ -102,7 +115,7 @@ router.delete('/', (req, res) => {
 });
 
 // 계정 전체 삭제
-router.delete('/all', (req, res) => {
+router.delete('/', (req, res) => {
   Account.deleteMany(
     {},
     (err) => {
