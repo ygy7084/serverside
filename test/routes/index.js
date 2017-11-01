@@ -7,7 +7,8 @@ import history from './history';
 export default function(){
   describe('Account Routes', account);
   describe('Shop Routes', shop);
-  describe('Customer Routes', customer);
-  describe('Product Routes', product);
-  describe('History Routes', history);
+  //describe('Picture Routes', picture);
+  //describe('Customer Routes', customer);
+  //describe('Product Routes', product);
+  //describe('History Routes', history);
 }

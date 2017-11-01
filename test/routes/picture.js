@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import configure from '../../server/configure';
 import{
-  Account,
+  Picture,
 } from '../../server/models';
 
 const should = chai.should();
@@ -14,20 +14,15 @@ export default function(){
   let tempId;
 
   /*
-    username: String,
-  password: String,
-  connectedShops: [
-    {
-      id: {type: Schema.Types.ObjectId, ref: 'shop'},
-      name: String,
-    }
-  ],
-  level : String,
+  fileName: String,
+  fileDir: String,
+  shopId : {type: Schema.Types.ObjectId, ref:'shop'},
+  size: String,
    */
 
 
   // account 추가 테스트
-  it('should save a account', (done) => {
+  it('should save many pictures', (done) => {
     chai.request(server)
       .post('/api/account')
       .send({
@@ -61,7 +56,7 @@ export default function(){
         res.body.data[0].should.have.property('username');
         res.body.data[0].should.have.property('password');
         res.body.data[0].should.have.property('level');
-       // res.body.size.should.eql(1);
+        // res.body.size.should.eql(1);
         tempId = res.body.data[0]._id;
         //console.log(tempId);
         done();

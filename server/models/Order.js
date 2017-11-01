@@ -37,15 +37,13 @@ const Order = new Schema({
       value: Number,
     }
   ],
-  messages: [
-    {
+  messages: [{
       name: String,
       phone: String,
       kind: String,
-      id : {type: Schema.Types.ObjectId, ref: `${this.kind}`},
+      id : {type: Schema.Types.ObjectId, refPath: 'messages.kind'},
       message: String,
-    }
-  ],
+    }],
   unreadMessages:Number,
   status: Number,
 });

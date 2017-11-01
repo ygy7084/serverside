@@ -11,18 +11,22 @@ var _mongoose2 = _interopRequireDefault(_mongoose);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Schema = _mongoose2.default.Schema;
-var Account = new _mongoose2.default.Schema({
+var Log = new Schema({
   username: String,
-  password: String,
-  connectedShops: [{
-    id: { type: Schema.Types.ObjectId, ref: 'shop' },
-    name: String
-  }],
-  level: String
+  ip: String,
+  httpMethod: String,
+  url: String,
+  userAgent: String,
+  dataFromClient: {
+    data: String,
+    value: String
+  },
+  datetime: Date,
+  error: String,
+  httpCode: String,
+  message: String
 });
 
-Account.index({ username: 1 }, { unique: true });
-
-var model = _mongoose2.default.model('account', Account);
+var model = _mongoose2.default.model('log', Log);
 
 exports.default = model;

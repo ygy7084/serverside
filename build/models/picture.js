@@ -11,18 +11,13 @@ var _mongoose2 = _interopRequireDefault(_mongoose);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Schema = _mongoose2.default.Schema;
-var Account = new _mongoose2.default.Schema({
-  username: String,
-  password: String,
-  connectedShops: [{
-    id: { type: Schema.Types.ObjectId, ref: 'shop' },
-    name: String
-  }],
-  level: String
+var Picture = new Schema({
+  fileName: String,
+  fileDir: String,
+  shopId: { type: Schema.Types.ObjectId, ref: 'shop' },
+  size: String
 });
 
-Account.index({ username: 1 }, { unique: true });
-
-var model = _mongoose2.default.model('account', Account);
+var model = _mongoose2.default.model('picture', Picture);
 
 exports.default = model;

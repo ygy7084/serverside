@@ -12,7 +12,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Schema = _mongoose2.default.Schema;
 var Shop = new Schema({
-  name: String
+  name: String,
+  phone: String
 });
 
 var model = _mongoose2.default.model('shop', Shop);
