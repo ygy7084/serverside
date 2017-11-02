@@ -5,13 +5,27 @@ import {
 } from '../models';
 
 const router = express.Router();
-
+/*
+  phone: String,
+  name : String,
+  rewards: [
+    {
+      shop: {
+        id: {type: Schema.Types.ObjectId, ref: 'shop'},
+        name: String,
+      },
+      name : String,
+      value: Number,
+    }
+  ]
+ */
 
 //고객 생성
 router.post('/', (req, res) => {
   const customerTemp = {
     phone: req.body.data.phone,
-    point : 0,
+    name : req.body.data.name,
+    rewards : req.body.data.rewards,
   };
 
   const customer = new Customer(customerTemp);
@@ -26,11 +40,23 @@ router.post('/', (req, res) => {
   return null;
 });
 
-
+/*
 router.post('/PointSave', (req, res) => {
   //let phone = req.body.data.phone;
   let id_check;
-  Customer.findOne({ phone: req.body.data.phone })
+  Customer.findOne({
+    phone : req.body.data.phone,
+    rewards : {
+      $elemMatch: {
+        shop :
+        {
+          $elemMatch : {
+            id: req.body.data.shop.id
+          }
+        }
+      }
+    }
+  })
     .lean()
     .exec((err, result) => {
       if(err) {
@@ -56,17 +82,6 @@ router.post('/PointSave', (req, res) => {
       }
       else{
         console.log('포인트 추가');
-        /*
-        const properties = [
-          'point',
-        ];
-
-        const update = {$set: {}};
-        for (const property of properties) {
-          if (Object.prototype.hasOwnProperty.call(req.body.data, property)) {
-            update.$set[property] = req.body.data[property] + 1;
-          }
-        }*/
         Customer.findOneAndUpdate(
           {phone: req.body.data.phone},
           {$inc: {point: 1}},
@@ -82,7 +97,7 @@ router.post('/PointSave', (req, res) => {
       }
 
     });
-
+*/
 
   /*
   if(!req.body.data.phone){
@@ -116,10 +131,50 @@ router.post('/PointSave', (req, res) => {
       },
     );
   }
-  */
-
   return null;
+});*/
 
+// shop.id, phone 가진 고객 검색
+router.post('/findandsave', (req,res) =>{
+  console.log(req.body.data.rewards[0].shop.id);
+  Customer.findOne({
+    phone : req.body.data.phone,
+    /*rewards : {
+      $elemMatch: {
+        shop :
+          {
+            $elemMatch : {
+              id: req.body.data.rewards[0].shop.id,
+            }
+          }
+      }
+    }*/
+    "rewards.shop.id" : req.body.data.rewards[0].shop.id
+  }).lean()
+    .exec((err, result) => {
+      if(err) {
+        return res.status(500).json({ message: '고객 조회 오류'});
+      }
+      console.log(result);
+      if(!result){
+        console.log("등록된 고객이 아닙니다. 신규 등록후 포인트 적립 진행");
+
+
+        Customer.update({phone:req.body.data.phone},{$push: {rewards: req.body.data.rewards[0]}})
+          .exec((err,resultc) => {
+          if(err){
+            return res.status(500).json({ message : 'Shop에 고객 등록 오류 '});
+          }
+          console.log(resultc);
+          return res.json({
+            data: resultc,
+          });
+        });
+      }
+      else{
+        console.log('포인트 추가');
+      }
+    });
 });
 
 
@@ -152,13 +207,14 @@ router.get('/:id', (req, res) => {
 });
 
 //고객 수정
-router.put('/', (req, res) => {
-  if(!req.body.data._id){
+router.put('/:_id', (req, res) => {
+  if(!req.params._id){
     return res.status(500).json({ message : '고객 수정 오류: _id가 전송되지 않았습니다.'});
   }
 
   const properties = [
     'phone',
+    'name',
   ];
   const update = { $set: {} };
   for (const property of properties){
@@ -181,13 +237,48 @@ router.put('/', (req, res) => {
   return null;
 });
 
+
+// Todo : rewards
+
+// 리워드 생성
+router.post('/reward', (req,res) => {
+
+  let customer_id = req.body.data.customer_id;
+
+
+});
+
+// 리워드 수정
+router.put('/reward/:id', (req,res) => {
+
+  let customer_id = req.body.data.customer_id;
+
+});
+
+// 리워드 삭제
+router.delete('/reward/:id', (req,res) => {
+
+  let customer_id = req.body.data.customer_id;
+
+});
+
+// 리워드 전체 삭제
+router.delete('/reward', (req, res) => {
+
+  let customer_id = req.body.data.customer_id;
+
+});
+
+
+
+
 //고객 삭제
-router.delete('/', (req, res) => {
-  if (!req.body.data._id) {
+router.delete('/:_id', (req, res) => {
+  if (!req.params._id) {
     return res.status(500).json({ message: '고객 삭제 오류: _id가 전송되지 않았습니다.' });
   }
   Customer.findOneAndRemove(
-    { _id: req.body.data._id },
+    { _id: req.params._id },
     (err, result) =>
       res.json({
         data: result,
@@ -197,7 +288,7 @@ router.delete('/', (req, res) => {
 });
 
 // 계정 전체 삭제
-router.delete('/all', (req, res) => {
+router.delete('/', (req, res) => {
   Customer.deleteMany(
     {},
     (err) => {

@@ -54,7 +54,6 @@ router.post('/many', function (req, res) {
     });
   }
 
-  //const picture = new Picture(pictureTemp);
   _models.Picture.insertMany(picturesTemp, function (err, result) {
     if (err) {
       return res.status(500).json({ message: '사진 다중 생성 오류:' });
@@ -79,6 +78,18 @@ router.get('/', function (req, res) {
   });
 });
 
+//사진 개별 조회
+router.get('/:id', function (req, res) {
+  _models.Picture.findOne({ _id: req.params.id }).lean().exec(function (err, result) {
+    if (err) {
+      return res.status(500).json({ message: '사진 조회 오류' });
+    }
+    return res.json({
+      data: result
+    });
+  });
+});
+
 //사진 개별 삭제
 router.delete('/:_id', function (req, res) {
   if (!req.params._id) {
@@ -96,7 +107,7 @@ router.delete('/:_id', function (req, res) {
 router.delete('/', function (req, res) {
   _models.Picture.deleteMany({}, function (err) {
     if (err) {
-      return res.status(500).json({ message: '매장 삭제 오류: DB 삭제에 문제가 있습니다.' });
+      return res.status(500).json({ message: '사진 삭제 오류: DB 삭제에 문제가 있습니다.' });
     }
     res.json({
       message: '삭제완료'

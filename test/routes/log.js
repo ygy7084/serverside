@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import configure from '../../server/configure';
 import{
-  Product,
+  Log,
 } from '../../server/models';
 
 const should = chai.should();
@@ -10,18 +10,43 @@ const server = `http://localhost:${configure.PORT}`;
 
 chai.use(chaiHttp);
 
+/*
+  username: String,
+  ip: String,
+  httpMethod: String,
+  url: String,
+  userAgent: String,
+  dataFromClient: {
+    data: String,
+    value: String
+  },
+  datetime: Date,
+  error : String,
+  httpCode: String,
+  message: String
+ */
+
 export default function(){
   let tempId;
 
-  // product 추가 테스트
-  it('should save a product', (done) => {
+  // log 추가 테스트
+  it('should save a log', (done) => {
     chai.request(server)
-      .post('/api/product')
+      .post('/api/log')
       .send({
         data:{
-          name : 'pro1',
-          price : 10000,
-
+          username: 'dohun log',
+          ip: 'dohun ip',
+          httpMethod: 'GET',
+          url: '/api/dohun',
+          userAgent: 'IE6',
+          dataFromClient: {
+            data: 'dohun',
+            value: 'ddhh'
+          },
+          error : '404',
+          httpCode: '500',
+          message: 'dh message'
         },
       })
       .end((err, res) => {
@@ -29,23 +54,23 @@ export default function(){
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.data.should.be.a('object');
-        res.body.data.should.have.property('name').eql('pro1');
-        res.body.data.should.have.property('price').eql(10000);
+        res.body.data.should.have.property('username').eql('dohun log');
+        res.body.data.should.have.property('url').eql('/api/dohun');
         //tempId = res.body.data._id;
         done();
       });
   });
 
-  it('should return a product list', (done) => {
+  it('should return a log list', (done) => {
     chai.request(server)
-      .get('/api/product')
+      .get('/api/log/')
       .end((err, res) => {
         should.exist(res.body);
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.data.should.be.a('array');
-        res.body.data[0].should.have.property('name');
-        res.body.data[0].should.have.property('price');
+        res.body.data[0].should.have.property('username');
+        res.body.data[0].should.have.property('url');
         //res.body.size.should.eql(1);
         tempId = res.body.data[0]._id;
         //console.log(tempId);
@@ -53,31 +78,11 @@ export default function(){
       });
   });
 
-  it('should modify the product identified by _id', (done) => {
-    chai.request(server)
-      .put(`/api/product/${tempId}`)
-      .send({
-        data: {
-          _id : tempId,
-          name : 'ehgns0606',
-          price : '30000',
-        },
-      })
-      .end((err, res) => {
-        should.exist(res.body);
-        res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.data.should.be.a('object');
-        //console.log(res.body.data);
-        res.body.data.should.have.property('name');
-        res.body.data.should.have.property('price');
-        done();
-      });
-  });
 
-  it('should remove a product', (done) => {
+
+  it('should remove a log', (done) => {
     chai.request(server)
-      .delete(`/api/product/${tempId}`)
+      .delete(`/api/log/${tempId}`)
       .send({
         data: {
           _id : tempId
@@ -89,7 +94,7 @@ export default function(){
         res.body.should.be.a('object');
         res.body.data.should.be.a('object');
         chai.request(server)
-          .get(`/api/product/${tempId}`)
+          .get(`/api/log/${tempId}`)
           .end((err, res) => {
             should.exist(res.body);
             res.should.have.status(200);

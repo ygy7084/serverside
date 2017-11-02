@@ -53,6 +53,7 @@ router.post('/many', (req, res) => {
     return res.json({
       data: result,
     });
+
   });
 
   return null;
@@ -75,7 +76,19 @@ router.get('/', (req, res) => {
     });
 });
 
-
+//사진 개별 조회
+router.get('/:id', (req, res) => {
+  Picture.findOne({ _id: req.params.id })
+    .lean()
+    .exec((err, result) => {
+      if(err) {
+        return res.status(500).json({ message: '사진 조회 오류'});
+      }
+      return res.json({
+        data: result,
+      });
+    });
+});
 
 //사진 개별 삭제
 router.delete('/:_id', (req, res) => {
@@ -98,7 +111,7 @@ router.delete('/', (req, res) => {
     {},
     (err) => {
       if (err) {
-        return res.status(500).json({ message: '매장 삭제 오류: DB 삭제에 문제가 있습니다.' });
+        return res.status(500).json({ message: '사진 삭제 오류: DB 삭제에 문제가 있습니다.' });
       }
       res.json({
         message: '삭제완료',

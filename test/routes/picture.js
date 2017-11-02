@@ -21,41 +21,53 @@ export default function(){
    */
 
 
-  // account 추가 테스트
+  // picture 추가 테스트
   it('should save many pictures', (done) => {
     chai.request(server)
-      .post('/api/account')
+      .post('/api/picture/many')
       .send({
-        data:{
-          username : 'dohun',
-          password : 'dhdhdh',
-          level : 'manager',
-        },
+        data:[
+          {
+            fileName : 'pic1',
+            fileDir : 'picpic1',
+            size : '100*100',
+          },
+          {
+            fileName : 'pic2',
+            fileDir : 'picpic2',
+            size : '200*200',
+          },
+          {
+            fileName : 'pic3',
+            fileDir : 'picpic3',
+            size : '300*300',
+          }
+        ],
       })
       .end((err, res) => {
         should.exist(res.body);
         res.should.have.status(200);
         res.body.should.be.a('object');
-        res.body.data.should.be.a('object');
-        res.body.data.should.have.property('username').eql('dohun');
-        res.body.data.should.have.property('password').eql('dhdhdh');
-        res.body.data.should.have.property('level').eql('manager');
+        res.body.data.should.be.a('array');
+        res.body.data[0].should.have.property('fileName').eql('pic1');
+        res.body.data[0].should.have.property('fileDir').eql('picpic1');
+        res.body.data[0].should.have.property('size').eql('100*100');
         //tempId = res.body.data._id;
         done();
       });
   });
 
-  it('should return a account list', (done) => {
+  it('should return a picture list', (done) => {
     chai.request(server)
-      .get('/api/account/')
+      .get('/api/picture/')
       .end((err, res) => {
         should.exist(res.body);
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.data.should.be.a('array');
-        res.body.data[0].should.have.property('username');
-        res.body.data[0].should.have.property('password');
-        res.body.data[0].should.have.property('level');
+        res.body.data[0].should.have.property('fileName');
+        res.body.data[0].should.have.property('fileDir');
+        res.body.data[0].should.have.property('size');
         // res.body.size.should.eql(1);
         tempId = res.body.data[0]._id;
         //console.log(tempId);
@@ -63,34 +75,13 @@ export default function(){
       });
   });
 
-  it('should modify the account identified by _id', (done) => {
+
+
+
+
+  it('should remove a picture', (done) => {
     chai.request(server)
-      .put(`/api/account/${tempId}`)
-      .send({
-        data: {
-          _id : tempId,
-          username : 'ehgns',
-          password : 'rlaskgus',
-          level : 'super'
-        },
-      })
-      .end((err, res) => {
-        should.exist(res.body);
-        res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.data.should.be.a('object');
-        //console.log(res.body.data);
-        res.body.data.should.have.property('username');
-        res.body.data.should.have.property('password');
-        done();
-      });
-  });
-
-
-
-  it('should remove a account', (done) => {
-    chai.request(server)
-      .delete(`/api/account/${tempId}`)
+      .delete(`/api/picture/${tempId}`)
       .send({
         data: {
           _id : tempId
@@ -102,7 +93,7 @@ export default function(){
         res.body.should.be.a('object');
         res.body.data.should.be.a('object');
         chai.request(server)
-          .get(`/api/account/${tempId}`)
+          .get(`/api/picture/${tempId}`)
           .end((err, res) => {
             should.exist(res.body);
             res.should.have.status(200);

@@ -5,15 +5,44 @@ import {
 } from '../models';
 
 const router = express.Router();
-
-
+/*
+  name: String,
+  pictures: [String],
+  price: Number,
+  description: String,
+  shop : {
+    id : { type: Schema.Types.ObjectId, ref:'shop' },
+    name : String
+  },
+  nutrients: [
+    {
+      name: String,
+      value: String,
+    }
+  ],
+  options: [
+    {
+      name: String,
+      selections: [
+        {
+          name: String,
+          price: Number,
+          canBeMany: Boolean,
+        }
+      ],
+    }
+  ],
+ */
 //상품 생성
 router.post('/', (req, res) => {
   const productTemp = {
     name: req.body.data.name,
+    pictures: req.body.data.pictures,
     price: req.body.data.price,
+    description: req.body.data.description,
     shop: req.body.data.shop,
-    image: req.body.data.image,
+    nutrients: req.body.data.nutrients,
+    options : req.body.data.options,
   };
 
   const product = new Product(productTemp);
@@ -57,16 +86,17 @@ router.get('/:id', (req, res) => {
 });
 
 //상품 수정
-router.put('/', (req, res) => {
-  if(!req.body.data._id){
+router.put('/:_id', (req, res) => {
+  if(!req.params._id){
     return res.status(500).json({ message : '상품 수정 오류: _id가 전송되지 않았습니다.'});
   }
 
   const properties = [
     'name',
     'price',
+    'pictures',
     'shop',
-    'image',
+    'description',
   ];
   const update = { $set: {} };
   for (const property of properties){
@@ -75,7 +105,7 @@ router.put('/', (req, res) => {
     }
   }
   Product.findOneAndUpdate(
-    { _id : req.body.data._id },
+    { _id : req.params._id },
     update,
     (err, result) => {
       if(err) {
@@ -90,12 +120,12 @@ router.put('/', (req, res) => {
 });
 
 //상품 삭제
-router.delete('/', (req, res) => {
-  if (!req.body.data._id) {
+router.delete('/:_id', (req, res) => {
+  if (!req.params._id) {
     return res.status(500).json({ message: '상품 삭제 오류: _id가 전송되지 않았습니다.' });
   }
   Product.findOneAndRemove(
-    { _id: req.body.data._id },
+    { _id: req.params._id },
     (err, result) =>
       res.json({
         data: result,
@@ -105,7 +135,7 @@ router.delete('/', (req, res) => {
 });
 
 // 상품 전체 삭제
-router.delete('/all', (req, res) => {
+router.delete('/', (req, res) => {
   Product.deleteMany(
     {},
     (err) => {

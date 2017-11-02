@@ -41,14 +41,7 @@ var Order = new Schema({
     name: String,
     value: Number
   }],
-  messages: [{
-    name: String,
-    phone: String,
-    kind: String,
-    id: { type: Schema.Types.ObjectId, refPath: 'messages.kind' },
-    message: String
-  }],
-  unreadMessages: Number,
+  message: String,
   status: Number
 });
 
