@@ -117,20 +117,50 @@ router.put('/:_id', function (req, res) {
 });
 
 //계정 삭제
-router.delete('/:_id', function (req, res) {
-  if (!req.params._id) {
+/*
+router.delete('/', (req, res) => {
+  if (!req.body.data._id) {
     return res.status(500).json({ message: '계정 삭제 오류: _id가 전송되지 않았습니다.' });
   }
-  _models.Account.findOneAndRemove({ _id: req.params._id }, function (err, result) {
-    return res.json({
-      data: result
+  Account.findOneAndRemove(
+    { _id: req.body.data._id },
+    (err, result) =>
+      res.json({
+        data: result,
+      }),
+  );
+  return null;
+});
+*/
+
+//계정 여러개 삭제
+router.delete('/', function (req, res) {
+
+  if (!req.body.data._id) {
+    return res.status(500).json({ message: '계정 삭제 오류: _id가 전송되지 않았습니다.' });
+  }
+  if (Array.isArray(req.body.data._id)) {
+    // id 배열이 들어오면
+    _models.Account.deleteMany({ _id: req.body.data._id }, function (err) {
+      if (err) {
+        return res.status(500).json({ message: '계정 삭제 오류: DB 삭제에 문제가 있습니다.' });
+      }
+      res.json({
+        message: '삭제완료'
+      });
     });
-  });
+  } else {
+    _models.Account.findOneAndRemove({ _id: req.body.data._id }, function (err, result) {
+      return res.json({
+        data: result
+      });
+    });
+  }
   return null;
 });
 
 // 계정 전체 삭제
-router.delete('/', function (req, res) {
+router.delete('/all', function (req, res) {
   _models.Account.deleteMany({}, function (err) {
     if (err) {
       return res.status(500).json({ message: '계정 삭제 오류: DB 삭제에 문제가 있습니다.' });

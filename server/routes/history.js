@@ -90,6 +90,7 @@ router.put('/', (req, res) => {
 });
 
 //내역 삭제
+/*
 router.delete('/', (req, res) => {
   if (!req.body.data._id) {
     return res.status(500).json({ message: '내역 삭제 오류: _id가 전송되지 않았습니다.' });
@@ -103,6 +104,37 @@ router.delete('/', (req, res) => {
   );
   return null;
 });
+*/
+
+router.delete('/', (req, res) => {
+
+
+  if (!req.body.data._id) {
+    return res.status(500).json({ message: '내역 삭제 오류: _id가 전송되지 않았습니다.' });
+  }
+  if(Array.isArray(req.body.data._id)) {
+    // id 배열이 들어오면
+    History.deleteMany({_id: req.body.data._id}, (err) => {
+      if (err) {
+        return res.status(500).json({message: '내역 삭제 오류: DB 삭제에 문제가 있습니다.'});
+      }
+      res.json({
+        message: '삭제완료',
+      });
+    });
+  }
+  else{
+    History.findOneAndRemove(
+      { _id: req.body.data._id },
+      (err, result) =>
+        res.json({
+          data: result,
+        }),
+    );
+  }
+  return null;
+});
+
 
 // 내역 전체 삭제
 router.delete('/all', (req, res) => {

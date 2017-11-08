@@ -10,6 +10,7 @@ import picture from './picture';
 
 export default function(){
   describe('Account Routes', account);
+  /*
   describe('Shop Routes', shop);
   describe('Nfc Routes', nfc);
   describe('Log Routes', log);
@@ -17,6 +18,8 @@ export default function(){
   describe('Picture Routes', picture);
   describe('Customer Routes', customer);
   describe('Product Routes', product);
+ */
+
   //describe('History Routes', history);
   //describe('data settings', dataSetting);
 }

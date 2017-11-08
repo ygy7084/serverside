@@ -105,20 +105,48 @@ router.put('/:_id', function (req, res) {
 });
 
 //매장 삭제
-router.delete('/:_id', function (req, res) {
+/*
+router.delete('/:_id', (req, res) => {
   if (!req.params._id) {
     return res.status(500).json({ message: '매장 삭제 오류: _id가 전송되지 않았습니다.' });
   }
-  _models.Shop.findOneAndRemove({ _id: req.params._id }, function (err, result) {
-    return res.json({
-      data: result
+  Shop.findOneAndRemove(
+    { _id: req.params._id },
+    (err, result) =>
+      res.json({
+        data: result,
+      }),
+  );
+  return null;
+});
+*/
+router.delete('/', function (req, res) {
+
+  if (!req.body.data._id) {
+    return res.status(500).json({ message: 'shop 삭제 오류: _id가 전송되지 않았습니다.' });
+  }
+  if (Array.isArray(req.body.data._id)) {
+    // id 배열이 들어오면
+    _models.Shop.deleteMany({ _id: req.body.data._id }, function (err) {
+      if (err) {
+        return res.status(500).json({ message: 'shop 삭제 오류: DB 삭제에 문제가 있습니다.' });
+      }
+      res.json({
+        message: '삭제완료'
+      });
     });
-  });
+  } else {
+    _models.Shop.findOneAndRemove({ _id: req.body.data._id }, function (err, result) {
+      return res.json({
+        data: result
+      });
+    });
+  }
   return null;
 });
 
 // 매장 전체 삭제
-router.delete('/', function (req, res) {
+router.delete('/all', function (req, res) {
   _models.Shop.deleteMany({}, function (err) {
     if (err) {
       return res.status(500).json({ message: '매장 삭제 오류: DB 삭제에 문제가 있습니다.' });

@@ -32,7 +32,7 @@ export default function(){
       .post('/api/account')
       .send({
         data:{
-          username : 'dohun',
+          username : 'dohun4',
           password : 'dhdhdh',
           level : 'manager',
         },
@@ -42,13 +42,16 @@ export default function(){
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.data.should.be.a('object');
-        res.body.data.should.have.property('username').eql('dohun');
+        res.body.data.should.have.property('username').eql('dohun4');
         res.body.data.should.have.property('password').eql('dhdhdh');
         res.body.data.should.have.property('level').eql('manager');
         //tempId = res.body.data._id;
         done();
       });
   });
+
+
+
 
   it('should return a account list', (done) => {
     chai.request(server)
@@ -95,7 +98,7 @@ export default function(){
 
   it('should remove a account', (done) => {
     chai.request(server)
-      .delete(`/api/account/${tempId}`)
+      .delete(`/api/account/`)
       .send({
         data: {
           _id : tempId
@@ -117,5 +120,6 @@ export default function(){
           })
       });
   })
+
 
 }

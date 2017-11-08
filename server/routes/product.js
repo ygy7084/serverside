@@ -120,6 +120,7 @@ router.put('/:_id', (req, res) => {
 });
 
 //상품 삭제
+/*
 router.delete('/:_id', (req, res) => {
   if (!req.params._id) {
     return res.status(500).json({ message: '상품 삭제 오류: _id가 전송되지 않았습니다.' });
@@ -133,9 +134,38 @@ router.delete('/:_id', (req, res) => {
   );
   return null;
 });
+*/
+router.delete('/', (req, res) => {
+
+
+  if (!req.body.data._id) {
+    return res.status(500).json({ message: 'product 삭제 오류: _id가 전송되지 않았습니다.' });
+  }
+  if(Array.isArray(req.body.data._id)) {
+    // id 배열이 들어오면
+    Product.deleteMany({_id: req.body.data._id}, (err) => {
+      if (err) {
+        return res.status(500).json({message: 'product 삭제 오류: DB 삭제에 문제가 있습니다.'});
+      }
+      res.json({
+        message: '삭제완료',
+      });
+    });
+  }
+  else{
+    Product.findOneAndRemove(
+      { _id: req.body.data._id },
+      (err, result) =>
+        res.json({
+          data: result,
+        }),
+    );
+  }
+  return null;
+});
 
 // 상품 전체 삭제
-router.delete('/', (req, res) => {
+router.delete('/all', (req, res) => {
   Product.deleteMany(
     {},
     (err) => {
