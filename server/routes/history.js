@@ -43,8 +43,8 @@ router.get('/', (req, res) => {
 });
 
 //내역 반환
-router.get('/:id', (req, res) => {
-  History.findOne({ _id: req.params.id })
+router.get('/:_id', (req, res) => {
+  History.findOne({ _id: req.params._id })
     .lean()
     .exec((err, result) => {
       if(err) {

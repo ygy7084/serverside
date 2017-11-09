@@ -41,8 +41,8 @@ router.get('/', (req, res) => {
 });
 
 //매장 단일 조회
-router.get('/:id', (req, res) => {
-  Shop.findOne({ _id: req.params.id })
+router.get('/:_id', (req, res) => {
+  Shop.findOne({ _id: req.params._id })
     .lean()
     .exec((err, result) => {
       if(err) {

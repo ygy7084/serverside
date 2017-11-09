@@ -136,7 +136,7 @@ router.post('/PointSave', (req, res) => {
 
 // shop.id, phone 가진 고객 검색
 router.post('/findandsave', (req,res) =>{
-  console.log(req.body.data.rewards[0].shop.id);
+  console.log(req.body.data.rewards[0].shop._id);
   Customer.findOne({
     phone : req.body.data.phone,
     /*rewards : {
@@ -149,7 +149,7 @@ router.post('/findandsave', (req,res) =>{
           }
       }
     }*/
-    "rewards.shop.id" : req.body.data.rewards[0].shop.id
+    "rewards.shop._id" : req.body.data.rewards[0].shop._id
   }).lean()
     .exec((err, result) => {
       if(err) {
@@ -193,8 +193,8 @@ router.get('/', (req, res) => {
 });
 
 //고객 단일
-router.get('/:id', (req, res) => {
-  Customer.findOne({ _id: req.params.id })
+router.get('/:_id', (req, res) => {
+  Customer.findOne({ _id: req.params._id })
     .lean()
     .exec((err, result) => {
       if(err) {

@@ -77,8 +77,8 @@ router.get('/', (req, res) => {
 });
 
 //사진 개별 조회
-router.get('/:id', (req, res) => {
-  Picture.findOne({ _id: req.params.id })
+router.get('/:_id', (req, res) => {
+  Picture.findOne({ _id: req.params._id })
     .lean()
     .exec((err, result) => {
       if(err) {

@@ -72,8 +72,8 @@ router.get('/', (req, res) => {
 });
 
 //상품 반환
-router.get('/:id', (req, res) => {
-  Product.findOne({ _id: req.params.id })
+router.get('/:_id', (req, res) => {
+  Product.findOne({ _id: req.params._id })
     .lean()
     .exec((err, result) => {
       if(err) {

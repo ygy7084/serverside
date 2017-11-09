@@ -3,13 +3,13 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 const Order = new Schema({
   shop: {
-    id: {type: Schema.Types.ObjectId, ref: 'shop'},
+    _id: {type: Schema.Types.ObjectId, ref: 'shop'},
     name: String,
   },
   products:[
     {
       name: String,
-      id : {type: Schema.Types.ObjectId, ref: 'product'},
+      _id : {type: Schema.Types.ObjectId, ref: 'product'},
       price: Number,
       options: [
         {
@@ -20,12 +20,12 @@ const Order = new Schema({
     }
   ],
   customer:{
-    id : {type: Schema.Types.ObjectId, ref:'customer'},
+    _id : {type: Schema.Types.ObjectId, ref:'customer'},
     name: String,
     phone: String,
   },
   nfc:{
-    id : {type: Schema.Types.ObjectId, ref:'nfc'},
+    _id : {type: Schema.Types.ObjectId, ref:'nfc'},
     name: String,
   },
   place: String,

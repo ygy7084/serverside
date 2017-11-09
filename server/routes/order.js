@@ -87,8 +87,8 @@ router.get('/', (req, res) => {
 });
 
 //order 단일 조회
-router.get('/:id', (req, res) => {
-  Order.findOne({ _id: req.params.id })
+router.get('/:_id', (req, res) => {
+  Order.findOne({ _id: req.params._id })
     .lean()
     .exec((err, result) => {
       if(err) {
