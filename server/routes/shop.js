@@ -56,7 +56,7 @@ router.get('/:id', (req, res) => {
 
 //매장 수정
 router.put('/', (req, res) => {
-  if(!req.body.data_id){
+  if(!req.body.data._id){
     return res.status(500).json({ message : '매장 수정 오류: _id가 전송되지 않았습니다.'});
   }
 
@@ -84,23 +84,6 @@ router.put('/', (req, res) => {
   );
   return null;
 });
-
-//매장 삭제
-/*
-router.delete('/:_id', (req, res) => {
-  if (!req.params._id) {
-    return res.status(500).json({ message: '매장 삭제 오류: _id가 전송되지 않았습니다.' });
-  }
-  Shop.findOneAndRemove(
-    { _id: req.params._id },
-    (err, result) =>
-      res.json({
-        data: result,
-      }),
-  );
-  return null;
-});
-*/
 
 //매장 여러개 삭제
 router.delete('/', (req, res) => {

@@ -192,7 +192,7 @@ router.get('/', (req, res) => {
     });
 });
 
-//고객 반환
+//고객 단일
 router.get('/:id', (req, res) => {
   Customer.findOne({ _id: req.params.id })
     .lean()
@@ -208,7 +208,7 @@ router.get('/:id', (req, res) => {
 
 //고객 수정
 router.put('/:_id', (req, res) => {
-  if(!req.params._id){
+  if(!req.body.data._id){
     return res.status(500).json({ message : '고객 수정 오류: _id가 전송되지 않았습니다.'});
   }
 
@@ -290,23 +290,21 @@ router.delete('/:_id', (req, res) => {
 
 //고객 여러개 삭제
 router.delete('/', (req, res) => {
-
-
-  if (!req.body.data._id) {
-    return res.status(500).json({ message: '고객 삭제 오류: _id가 전송되지 않았습니다.' });
-  }
-  if(Array.isArray(req.body.data._id)) {
-    // id 배열이 들어오면
-    Customer.deleteMany({_id: req.body.data._id}, (err) => {
+  if(Array.isArray(req.body.data)) {
+    const _ids = req.body.data.map(o => o._id);
+    Customer.deleteMany({_id: { $in: _ids } }, (err) => {
       if (err) {
-        return res.status(500).json({message: '고객 삭제 오류: DB 삭제에 문제가 있습니다.'});
+        return res.status(500).json({message: '계정 삭제 오류: DB 삭제에 문제가 있습니다.'});
       }
       res.json({
-        message: '삭제완료',
+        data: { message: '삭제완료' },
       });
     });
   }
-  else{
+  else {
+    if (!req.body.data._id) {
+      return res.status(500).json({message: '계정 삭제 오류: _id가 전송되지 않았습니다.'});
+    }
     Customer.findOneAndRemove(
       { _id: req.body.data._id },
       (err, result) =>
