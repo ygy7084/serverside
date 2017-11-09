@@ -92,7 +92,7 @@ var corsOptions = {
   credentials: true
 };
 
-app.use((0, _cors2.default)());
+app.use((0, _cors2.default)(corsOptions));
 
 app.post('/auth/login', function (req, res) {
   return res.json({
@@ -137,7 +137,14 @@ app.use(auth);
 */
 // API 라우트
 app.use('/api', _routes2.default);
-
+app.post('/login', function (req, res) {
+  console.log(req.body.data);
+  if (req.body.data.username === 'abc') {
+    res.json({ data: { success: true } });
+  } else {
+    res.status(500).send({ message: 'gg' });
+  }
+});
 // 404 에러
 app.use(function (req, res) {
   res.status(404).send('NOT FOUND');
