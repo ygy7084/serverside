@@ -4,12 +4,11 @@ const Schema = mongoose.Schema;
 const Account = new mongoose.Schema({
   username: String,
   password: String,
-  connectedShops: [
-    {
-      id: {type: Schema.Types.ObjectId, ref: 'shop'},
-      name: String,
-    }
-  ],
+  connectedShop:
+  {
+    id: {type: Schema.Types.ObjectId, ref: 'shop'},
+    name: String,
+  },
   level : String,
 });
 
