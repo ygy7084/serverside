@@ -45,7 +45,7 @@ app.use('/', express.static(path.join(__dirname, './../public')));
 
 const whitelist = ['http://localhost:3000', 'http://localhost', 'http://172.30.1.32:3000'];
 
-
+/*
 const corsOptions = {
   origin(origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
@@ -58,7 +58,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+*/
 app.post('/auth/login', (req, res) => {
   return res.json({
     data: {

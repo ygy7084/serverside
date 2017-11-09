@@ -27,6 +27,7 @@ export default function(){
 
 
   // account 추가 테스트
+  /*
   it('should save a account', (done) => {
     chai.request(server)
       .post('/api/account')
@@ -49,13 +50,13 @@ export default function(){
         done();
       });
   });
-
+*/
 
 
 
   it('should return a account list', (done) => {
     chai.request(server)
-      .get('/api/account/')
+      .get('/api/account/5a03f7cb2d3b7e1cb81eb1f4')
       .end((err, res) => {
         should.exist(res.body);
         res.should.have.status(200);
@@ -70,7 +71,7 @@ export default function(){
         done();
       });
   });
-
+/*
   it('should modify the account identified by _id', (done) => {
     chai.request(server)
       .put(`/api/account/${tempId}`)
@@ -120,6 +121,6 @@ export default function(){
           })
       });
   })
-
+*/
 
 }

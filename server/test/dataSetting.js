@@ -19,7 +19,7 @@ db.on('open', () => {
 
   // shop 추가
   let shop1 = new Shop({
-    name : 'shop1',
+    name : 'dohuns shop',
     phone : '1111',
   });
 
@@ -49,7 +49,10 @@ db.on('open', () => {
   let account1 = new Account({
     username : 'user1',
     password : 'pw1111',
-    connectedShops : [shop1,shop2],
+    connectedShop : {
+      id: shop1,
+      name: shop1.name,
+    },
     level : 'manager',
   });
 

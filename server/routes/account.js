@@ -30,11 +30,12 @@ router.post('/', (req, res) => {
 
 //계정 리스트 조회
 router.get('/', (req, res) => {
-  Account.find({}).populate('connectedShop')
+  Account.find({})
     .exec((err, result) => {
       if(err){
         return res.status(500).json({ message : "계정 리스트 조회 오류 "});
       }
+
       return res.json({
         data: result,
       });
@@ -43,12 +44,13 @@ router.get('/', (req, res) => {
 
 //계정 단일 조회
 router.get('/:id', (req, res) => {
-  Account.findOne({ _id: req.params.id })
+  Account.findOne({ _id: req.params.id }).populate('connectedShop.id')
     .lean()
     .exec((err, result) => {
       if(err) {
         return res.status(500).json({ message: '계정 조회 오류'});
       }
+      console.log(result);
       return res.json({
         data: result,
       });
