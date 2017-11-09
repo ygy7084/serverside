@@ -11,11 +11,27 @@ var _mongoose2 = _interopRequireDefault(_mongoose);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Schema = _mongoose2.default.Schema;
-var Product = new _mongoose2.default.Schema({
+var Product = new Schema({
   name: String,
-  price: String,
-  shop: { type: Schema.Types.ObjectId, ref: 'shop' },
-  image: String
+  pictures: [String],
+  price: Number,
+  description: String,
+  shop: {
+    id: { type: Schema.Types.ObjectId, ref: 'shop' },
+    name: String
+  },
+  nutrients: [{
+    name: String,
+    value: String
+  }],
+  options: [{
+    name: String,
+    selections: [{
+      name: String,
+      price: Number,
+      canBeMany: Boolean
+    }]
+  }]
 });
 
 var model = _mongoose2.default.model('product', Product);

@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import configure from '../../server/configure';
 import{
-  Product,
+  Picture,
 } from '../../server/models';
 
 const should = chai.should();
@@ -13,71 +13,75 @@ chai.use(chaiHttp);
 export default function(){
   let tempId;
 
-  // product 추가 테스트
-  it('should save a product', (done) => {
-    chai.request(server)
-      .post('/api/product')
-      .send({
-        data:{
-          name : 'pro1',
-          price : 10000,
+  /*
+  fileName: String,
+  fileDir: String,
+  shopId : {type: Schema.Types.ObjectId, ref:'shop'},
+  size: String,
+   */
 
-        },
+
+  // picture 추가 테스트
+  it('should save many pictures', (done) => {
+    chai.request(server)
+      .post('/api/picture/many')
+      .send({
+        data:[
+          {
+            fileName : 'pic1',
+            fileDir : 'picpic1',
+            size : '100*100',
+          },
+          {
+            fileName : 'pic2',
+            fileDir : 'picpic2',
+            size : '200*200',
+          },
+          {
+            fileName : 'pic3',
+            fileDir : 'picpic3',
+            size : '300*300',
+          }
+        ],
       })
       .end((err, res) => {
         should.exist(res.body);
         res.should.have.status(200);
         res.body.should.be.a('object');
-        res.body.data.should.be.a('object');
-        res.body.data.should.have.property('name').eql('pro1');
-        res.body.data.should.have.property('price').eql(10000);
+        res.body.data.should.be.a('array');
+        res.body.data[0].should.have.property('fileName').eql('pic1');
+        res.body.data[0].should.have.property('fileDir').eql('picpic1');
+        res.body.data[0].should.have.property('size').eql('100*100');
         //tempId = res.body.data._id;
         done();
       });
   });
 
-  it('should return a product list', (done) => {
+  it('should return a picture list', (done) => {
     chai.request(server)
-      .get('/api/product')
+      .get('/api/picture/')
       .end((err, res) => {
         should.exist(res.body);
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.data.should.be.a('array');
-        res.body.data[0].should.have.property('name');
-        res.body.data[0].should.have.property('price');
-        //res.body.size.should.eql(1);
+        res.body.data[0].should.have.property('fileName');
+        res.body.data[0].should.have.property('fileDir');
+        res.body.data[0].should.have.property('size');
+        // res.body.size.should.eql(1);
         tempId = res.body.data[0]._id;
         //console.log(tempId);
         done();
       });
   });
 
-  it('should modify the product identified by _id', (done) => {
-    chai.request(server)
-      .put(`/api/product/${tempId}`)
-      .send({
-        data: {
-          _id : tempId,
-          name : 'ehgns0606',
-          price : '30000',
-        },
-      })
-      .end((err, res) => {
-        should.exist(res.body);
-        res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.data.should.be.a('object');
-        //console.log(res.body.data);
-        res.body.data.should.have.property('name');
-        res.body.data.should.have.property('price');
-        done();
-      });
-  });
 
-  it('should remove a product', (done) => {
+
+
+
+  it('should remove a picture', (done) => {
     chai.request(server)
-      .delete(`/api/product/${tempId}`)
+      .delete(`/api/picture/${tempId}`)
       .send({
         data: {
           _id : tempId
@@ -89,7 +93,7 @@ export default function(){
         res.body.should.be.a('object');
         res.body.data.should.be.a('object');
         chai.request(server)
-          .get(`/api/product/${tempId}`)
+          .get(`/api/picture/${tempId}`)
           .end((err, res) => {
             should.exist(res.body);
             res.should.have.status(200);
@@ -99,4 +103,5 @@ export default function(){
           })
       });
   })
+
 }

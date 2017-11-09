@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import configure from '../../server/configure';
 import{
-  Account,
+  Nfc,
 } from '../../server/models';
 
 const should = chai.should();
@@ -10,31 +10,26 @@ const server = `http://localhost:${configure.PORT}`;
 
 chai.use(chaiHttp);
 
+/*
+  name: String,
+  shop: {
+    id: {type: Schema.Types.ObjectId, ref: 'shop'},
+    name: String,
+  },
+  url: String,
+ */
+
 export default function(){
   let tempId;
 
-  /*
-    username: String,
-  password: String,
-  connectedShops: [
-    {
-      id: {type: Schema.Types.ObjectId, ref: 'shop'},
-      name: String,
-    }
-  ],
-  level : String,
-   */
-
-
-  // account 추가 테스트
-  it('should save a account', (done) => {
+  // nfc 추가 테스트
+  it('should save a nfc', (done) => {
     chai.request(server)
-      .post('/api/account')
+      .post('/api/nfc')
       .send({
         data:{
-          username : 'dohun4',
-          password : 'dhdhdh',
-          level : 'manager',
+          name : 'dohun nfc',
+          url : 'nfc.nfcnfc.com',
         },
       })
       .end((err, res) => {
@@ -42,44 +37,37 @@ export default function(){
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.data.should.be.a('object');
-        res.body.data.should.have.property('username').eql('dohun4');
-        res.body.data.should.have.property('password').eql('dhdhdh');
-        res.body.data.should.have.property('level').eql('manager');
+        res.body.data.should.have.property('name').eql('dohun nfc');
+        res.body.data.should.have.property('url').eql('nfc.nfcnfc.com');
         //tempId = res.body.data._id;
         done();
       });
   });
 
-
-
-
-  it('should return a account list', (done) => {
+  it('should return a nfc list', (done) => {
     chai.request(server)
-      .get('/api/account/')
+      .get('/api/nfc/')
       .end((err, res) => {
         should.exist(res.body);
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.data.should.be.a('array');
-        res.body.data[0].should.have.property('username');
-        res.body.data[0].should.have.property('password');
-        res.body.data[0].should.have.property('level');
-       // res.body.size.should.eql(1);
+        res.body.data[0].should.have.property('name');
+        res.body.data[0].should.have.property('url');
+        //res.body.size.should.eql(1);
         tempId = res.body.data[0]._id;
         //console.log(tempId);
         done();
       });
   });
 
-  it('should modify the account identified by _id', (done) => {
+  it('should modify the nfc identified by _id', (done) => {
     chai.request(server)
-      .put(`/api/account/${tempId}`)
+      .put(`/api/nfc/${tempId}`)
       .send({
         data: {
-          _id : tempId,
-          username : 'ehgns',
-          password : 'rlaskgus',
-          level : 'super'
+          name : 'nfc1',
+          url: 'www.naver.com'
         },
       })
       .end((err, res) => {
@@ -88,17 +76,15 @@ export default function(){
         res.body.should.be.a('object');
         res.body.data.should.be.a('object');
         //console.log(res.body.data);
-        res.body.data.should.have.property('username');
-        res.body.data.should.have.property('password');
+        res.body.data.should.have.property('name');
+        res.body.data.should.have.property('url');
         done();
       });
   });
 
-
-
-  it('should remove a account', (done) => {
+  it('should remove a nfc', (done) => {
     chai.request(server)
-      .delete(`/api/account/`)
+      .delete(`/api/nfc/${tempId}`)
       .send({
         data: {
           _id : tempId
@@ -110,7 +96,7 @@ export default function(){
         res.body.should.be.a('object');
         res.body.data.should.be.a('object');
         chai.request(server)
-          .get(`/api/account/${tempId}`)
+          .get(`/api/nfc/${tempId}`)
           .end((err, res) => {
             should.exist(res.body);
             res.should.have.status(200);
@@ -120,6 +106,4 @@ export default function(){
           })
       });
   })
-
-
 }

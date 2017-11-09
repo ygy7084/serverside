@@ -32,6 +32,22 @@ var _test = require('./test1');
 
 var _test2 = _interopRequireDefault(_test);
 
+var _picture = require('./picture');
+
+var _picture2 = _interopRequireDefault(_picture);
+
+var _nfc = require('./nfc');
+
+var _nfc2 = _interopRequireDefault(_nfc);
+
+var _log = require('./log');
+
+var _log2 = _interopRequireDefault(_log);
+
+var _order = require('./order');
+
+var _order2 = _interopRequireDefault(_order);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = _express2.default.Router();
@@ -42,5 +58,9 @@ router.use('/customer', _customer2.default);
 router.use('/product', _product2.default);
 router.use('/history', _history2.default);
 router.use('/test1', _test2.default);
+router.use('/picture', _picture2.default);
+router.use('/nfc', _nfc2.default);
+router.use('/log', _log2.default);
+router.use('/order', _order2.default);
 
 exports.default = router;

@@ -1,25 +1,33 @@
 import express from 'express';
 
 import {
-  History,
+  Nfc,
 } from '../models';
 
 const router = express.Router();
 
+/*
+  name: String,
+  shop: {
+    id: {type: Schema.Types.ObjectId, ref: 'shop'},
+    name: String,
+  },
+  url: String,
+ */
 
-//내역 생성
+
+//nfc 생성
 router.post('/', (req, res) => {
-  const historyTemp = {
-    customer: req.body.data.customer,
-    product: req.body.data.product,
+  const nfcTemp = {
+    name: req.body.data.name,
     shop: req.body.data.shop,
-    datetime: req.body.data.datetime,
+    url: req.body.data.url,
   };
 
-  const history = new History(historyTemp);
-  history.save((err,result) => {
+  const nfc = new Nfc(nfcTemp);
+  nfc.save((err,result) => {
     if(err){
-      return res.status(500).json({ message : '내역 생성 오류:'});
+      return res.status(500).json({ message : 'nfc 생성 오류:'});
     }
     return res.json({
       data: result,
@@ -29,12 +37,12 @@ router.post('/', (req, res) => {
   return null;
 });
 
-//내역 리스트 반환
+//nfc 리스트 반환
 router.get('/', (req, res) => {
-  History.find({})
+  Nfc.find({})
     .exec((err, result) => {
       if(err){
-        return res.status(500).json({ message : "내역 리스트 조회 오류 "});
+        return res.status(500).json({ message : "nfc 리스트 조회 오류 "});
       }
       return res.json({
         data: result,
@@ -42,13 +50,13 @@ router.get('/', (req, res) => {
     });
 });
 
-//내역 반환
+//nfc 반환
 router.get('/:id', (req, res) => {
-  History.findOne({ _id: req.params.id })
+  Nfc.findOne({ _id: req.params.id })
     .lean()
     .exec((err, result) => {
       if(err) {
-        return res.status(500).json({ message: '내역 조회 오류'});
+        return res.status(500).json({ message: 'nfc 조회 오류'});
       }
       return res.json({
         data: result,
@@ -56,17 +64,16 @@ router.get('/:id', (req, res) => {
     });
 });
 
-//내역 수정
-router.put('/', (req, res) => {
-  if(!req.body.data._id){
-    return res.status(500).json({ message : '내역 수정 오류: _id가 전송되지 않았습니다.'});
+//nfc 수정
+router.put('/:_id', (req, res) => {
+  if(!req.params._id){
+    return res.status(500).json({ message : 'nfc 수정 오류: _id가 전송되지 않았습니다.'});
   }
 
   const properties = [
-    'customer',
-    'product',
+    'name',
     'shop',
-    'datetime',
+    'url',
   ];
   const update = { $set: {} };
   for (const property of properties){
@@ -74,12 +81,12 @@ router.put('/', (req, res) => {
       update.$set[property] = req.body.data[property];
     }
   }
-  History.findOneAndUpdate(
-    { _id : req.body.data._id },
+  Nfc.findOneAndUpdate(
+    { _id : req.params._id },
     update,
     (err, result) => {
       if(err) {
-        return res.status(500).json({ message: "내역 수정 오류 "});
+        return res.status(500).json({ message: "nfc 수정 오류 "});
       }
       return res.json({
         data: result,
@@ -89,14 +96,14 @@ router.put('/', (req, res) => {
   return null;
 });
 
-//내역 삭제
+//nfc 삭제
 /*
-router.delete('/', (req, res) => {
-  if (!req.body.data._id) {
-    return res.status(500).json({ message: '내역 삭제 오류: _id가 전송되지 않았습니다.' });
+router.delete('/:_id', (req, res) => {
+  if (!req.params._id) {
+    return res.status(500).json({ message: 'nfc 삭제 오류: _id가 전송되지 않았습니다.' });
   }
-  History.findOneAndRemove(
-    { _id: req.body.data._id },
+  Nfc.findOneAndRemove(
+    { _id: req.params._id },
     (err, result) =>
       res.json({
         data: result,
@@ -110,13 +117,13 @@ router.delete('/', (req, res) => {
 
 
   if (!req.body.data._id) {
-    return res.status(500).json({ message: '내역 삭제 오류: _id가 전송되지 않았습니다.' });
+    return res.status(500).json({ message: 'nfc 삭제 오류: _id가 전송되지 않았습니다.' });
   }
   if(Array.isArray(req.body.data._id)) {
     // id 배열이 들어오면
-    History.deleteMany({_id: req.body.data._id}, (err) => {
+    Nfc.deleteMany({_id: req.body.data._id}, (err) => {
       if (err) {
-        return res.status(500).json({message: '내역 삭제 오류: DB 삭제에 문제가 있습니다.'});
+        return res.status(500).json({message: 'nfc 삭제 오류: DB 삭제에 문제가 있습니다.'});
       }
       res.json({
         message: '삭제완료',
@@ -124,7 +131,7 @@ router.delete('/', (req, res) => {
     });
   }
   else{
-    History.findOneAndRemove(
+    Nfc.findOneAndRemove(
       { _id: req.body.data._id },
       (err, result) =>
         res.json({
@@ -135,14 +142,13 @@ router.delete('/', (req, res) => {
   return null;
 });
 
-
-// 내역 전체 삭제
+// nfc 전체 삭제
 router.delete('/all', (req, res) => {
-  History.deleteMany(
+  Nfc.deleteMany(
     {},
     (err) => {
       if (err) {
-        return res.status(500).json({ message: '내역 삭제 오류: DB 삭제에 문제가 있습니다.' });
+        return res.status(500).json({ message: 'nfc 삭제 오류: DB 삭제에 문제가 있습니다.' });
       }
       res.json({
         message: '삭제완료',

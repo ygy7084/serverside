@@ -4,9 +4,16 @@ const Schema = mongoose.Schema;
 const Customer = new Schema({
   phone: String,
   name : String,
-  birth : Date,
-  memo : String,
-  point : Number,
+  rewards: [
+    {
+      shop: {
+        id: {type: Schema.Types.ObjectId, ref: 'shop'},
+        name: String,
+      },
+      name : String,
+      value: Number,
+    }
+  ]
 });
 
 Customer.index({ phone: 1 }, { unique: true });

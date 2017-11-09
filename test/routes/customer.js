@@ -14,12 +14,23 @@ export default function(){
   let tempId;
 
   // customer 추가 테스트
+
   it('should save a customer', (done) => {
     chai.request(server)
       .post('/api/customer')
       .send({
         data:{
-          phone : '01030261964',
+          phone: '01011112222',
+          name: 'dhtest',
+          rewards: [
+            {
+              shop :{
+                //id : '59fac3161d1f8d216c9ae423',
+              },
+              name : 'shop3',
+              value : 1,
+            },
+          ]
         },
       })
       .end((err, res) => {
@@ -27,13 +38,13 @@ export default function(){
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.data.should.be.a('object');
-        res.body.data.should.have.property('phone').eql('01030261964');
+        res.body.data.should.have.property('phone').eql('01011112222');
         //tempId = res.body.data._id;
         done();
       });
   });
 
-  it('should return a customer and num_of_accounts', (done) => {
+  it('should return a customer list', (done) => {
     chai.request(server)
       .get('/api/customer/')
       .end((err, res) => {
@@ -44,14 +55,43 @@ export default function(){
         res.body.data[0].should.have.property('phone');
         //res.body.size.should.eql(1);
         tempId = res.body.data[0]._id;
+        //console.dir(res.body.data[0].rewards);
         //console.log(tempId);
         done();
       });
   });
+/*
+  it('should find and save point by shop_id and phone', (done) =>{
+    chai.request(server)
+      .post('/api/customer/findandsave')
+      .send({
+        data:{
+          phone: '01011112222',
+          name: 'dhtest',
+          rewards: [
+            {
+              shop :{
+                id : '59faa29ccaec781d54338c0e',
+                name : 'shop3'
+              },
+              name : 'shop3',
+              value : 1,
+            },
+          ]
+
+        }
+      })
+      .end((err, res) =>{
+        should.exist(res.body);
+        console.log(res.body);
+        done();
+      })
+  });
+*/
 
   it('should modify the customer identified by _id', (done) => {
     chai.request(server)
-      .put('/api/customer')
+      .put(`/api/customer/${tempId}`)
       .send({
         data: {
           _id : tempId,
@@ -68,7 +108,7 @@ export default function(){
         done();
       });
   });
-
+/*
   it('should save a point for customer', (done) => {
     chai.request(server)
       .post('/api/customer/PointSave')
@@ -85,13 +125,13 @@ export default function(){
         res.body.data.should.have.property('point').eql(1);
         done();
       });
-  });
+  });*/
 
 
-  /*
+
   it('should remove a customer', (done) => {
     chai.request(server)
-      .delete('/api/customer')
+      .delete(`/api/customer/${tempId}`)
       .send({
         data: {
           _id : tempId
@@ -113,5 +153,5 @@ export default function(){
           })
       });
   })
-  */
+
 }

@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import configure from '../../server/configure';
 import{
-  Account,
+  Order,
 } from '../../server/models';
 
 const should = chai.should();
@@ -12,29 +12,34 @@ chai.use(chaiHttp);
 
 export default function(){
   let tempId;
+/*
+    shop: req.body.data.shop,
+    products : req.body.data.products,
+    customer : req.body.data.customer,
+    nfc : req.body.data.nfc,
+    place : req.body.data.place,
+    orderedWay : req.body.data.place,
+    datetime : req.body.data.datetime,
+    payment : req.body.data.payment,
+    message : req.body.data.message,
+    status : req.body.data.status,
+ */
 
-  /*
-    username: String,
-  password: String,
-  connectedShops: [
-    {
-      id: {type: Schema.Types.ObjectId, ref: 'shop'},
-      name: String,
-    }
-  ],
-  level : String,
-   */
 
-
-  // account 추가 테스트
-  it('should save a account', (done) => {
+  // order 추가 테스트
+  it('should save a order', (done) => {
     chai.request(server)
-      .post('/api/account')
+      .post('/api/order')
       .send({
         data:{
-          username : 'dohun4',
-          password : 'dhdhdh',
-          level : 'manager',
+          place : 'suwon',
+          orderedWay : 'cash',
+          payment : {
+            name : 'cash',
+            value : 10000,
+          },
+          message : 'hihihi',
+          status : 1,
         },
       })
       .end((err, res) => {
@@ -42,44 +47,38 @@ export default function(){
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.data.should.be.a('object');
-        res.body.data.should.have.property('username').eql('dohun4');
-        res.body.data.should.have.property('password').eql('dhdhdh');
-        res.body.data.should.have.property('level').eql('manager');
+        res.body.data.should.have.property('place').eql('suwon');
+        res.body.data.should.have.property('status').eql(1);
         //tempId = res.body.data._id;
         done();
       });
   });
 
-
-
-
-  it('should return a account list', (done) => {
+  it('should return a order list', (done) => {
     chai.request(server)
-      .get('/api/account/')
+      .get('/api/order')
       .end((err, res) => {
         should.exist(res.body);
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.data.should.be.a('array');
-        res.body.data[0].should.have.property('username');
-        res.body.data[0].should.have.property('password');
-        res.body.data[0].should.have.property('level');
-       // res.body.size.should.eql(1);
+        res.body.data[0].should.have.property('place');
+        res.body.data[0].should.have.property('status');
+        //res.body.size.should.eql(1);
         tempId = res.body.data[0]._id;
         //console.log(tempId);
         done();
       });
   });
 
-  it('should modify the account identified by _id', (done) => {
+  it('should modify the order identified by _id', (done) => {
     chai.request(server)
-      .put(`/api/account/${tempId}`)
+      .put(`/api/order/${tempId}`)
       .send({
         data: {
           _id : tempId,
-          username : 'ehgns',
-          password : 'rlaskgus',
-          level : 'super'
+          place : 'seoul',
+          message : 'byebye',
         },
       })
       .end((err, res) => {
@@ -88,17 +87,15 @@ export default function(){
         res.body.should.be.a('object');
         res.body.data.should.be.a('object');
         //console.log(res.body.data);
-        res.body.data.should.have.property('username');
-        res.body.data.should.have.property('password');
+        res.body.data.should.have.property('place');
+        res.body.data.should.have.property('message');
         done();
       });
   });
 
-
-
-  it('should remove a account', (done) => {
+  it('should remove a order', (done) => {
     chai.request(server)
-      .delete(`/api/account/`)
+      .delete(`/api/order/${tempId}`)
       .send({
         data: {
           _id : tempId
@@ -110,7 +107,7 @@ export default function(){
         res.body.should.be.a('object');
         res.body.data.should.be.a('object');
         chai.request(server)
-          .get(`/api/account/${tempId}`)
+          .get(`/api/product/${tempId}`)
           .end((err, res) => {
             should.exist(res.body);
             res.should.have.status(200);
@@ -120,6 +117,4 @@ export default function(){
           })
       });
   })
-
-
 }

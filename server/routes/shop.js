@@ -11,6 +11,7 @@ const router = express.Router();
 router.post('/', (req, res) => {
   const shopTemp = {
     name: req.body.data.name,
+    phone: req.body.data.phone,
   };
 
   const shop = new Shop(shopTemp);
@@ -54,13 +55,14 @@ router.get('/:id', (req, res) => {
 });
 
 //매장 수정
-router.put('/', (req, res) => {
-  if(!req.body.data._id){
+router.put('/:_id', (req, res) => {
+  if(!req.params._id){
     return res.status(500).json({ message : '매장 수정 오류: _id가 전송되지 않았습니다.'});
   }
 
   const properties = [
     'name',
+    'phone',
   ];
   const update = { $set: {} };
   for (const property of properties){
@@ -69,7 +71,7 @@ router.put('/', (req, res) => {
     }
   }
   Shop.findOneAndUpdate(
-    { _id : req.body.data._id },
+    { _id : req.params._id },
     update,
     (err, result) => {
       if(err) {
@@ -84,12 +86,13 @@ router.put('/', (req, res) => {
 });
 
 //매장 삭제
-router.delete('/', (req, res) => {
-  if (!req.body.data._id) {
+/*
+router.delete('/:_id', (req, res) => {
+  if (!req.params._id) {
     return res.status(500).json({ message: '매장 삭제 오류: _id가 전송되지 않았습니다.' });
   }
   Shop.findOneAndRemove(
-    { _id: req.body.data._id },
+    { _id: req.params._id },
     (err, result) =>
       res.json({
         data: result,
@@ -97,8 +100,37 @@ router.delete('/', (req, res) => {
   );
   return null;
 });
+*/
+router.delete('/', (req, res) => {
 
-// 계정 전체 삭제
+
+  if (!req.body.data._id) {
+    return res.status(500).json({ message: 'shop 삭제 오류: _id가 전송되지 않았습니다.' });
+  }
+  if(Array.isArray(req.body.data._id)) {
+    // id 배열이 들어오면
+    Shop.deleteMany({_id: req.body.data._id}, (err) => {
+      if (err) {
+        return res.status(500).json({message: 'shop 삭제 오류: DB 삭제에 문제가 있습니다.'});
+      }
+      res.json({
+        message: '삭제완료',
+      });
+    });
+  }
+  else{
+    Shop.findOneAndRemove(
+      { _id: req.body.data._id },
+      (err, result) =>
+        res.json({
+          data: result,
+        }),
+    );
+  }
+  return null;
+});
+
+// 매장 전체 삭제
 router.delete('/all', (req, res) => {
   Shop.deleteMany(
     {},

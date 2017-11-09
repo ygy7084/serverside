@@ -1,5 +1,5 @@
 {
 
-  "MONGO_URL": "mongodb://mamre:1234@ds237735.mlab.com:37735/mamre"
+  "MONGO_URL" : "mongodb://localhost:27017"
 
 }
