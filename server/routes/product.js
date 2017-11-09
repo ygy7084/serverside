@@ -87,7 +87,7 @@ router.get('/:id', (req, res) => {
 
 //상품 수정
 router.put('/:_id', (req, res) => {
-  if(!req.params._id){
+  if(!req.body.data._id){
     return res.status(500).json({ message : '상품 수정 오류: _id가 전송되지 않았습니다.'});
   }
 
@@ -105,7 +105,7 @@ router.put('/:_id', (req, res) => {
     }
   }
   Product.findOneAndUpdate(
-    { _id : req.params._id },
+    { _id : req.body.data._id },
     update,
     (err, result) => {
       if(err) {
@@ -135,24 +135,23 @@ router.delete('/:_id', (req, res) => {
   return null;
 });
 */
+// 상품 여러개 삭제
 router.delete('/', (req, res) => {
-
-
-  if (!req.body.data._id) {
-    return res.status(500).json({ message: 'product 삭제 오류: _id가 전송되지 않았습니다.' });
-  }
-  if(Array.isArray(req.body.data._id)) {
-    // id 배열이 들어오면
-    Product.deleteMany({_id: req.body.data._id}, (err) => {
+  if(Array.isArray(req.body.data)) {
+    const _ids = req.body.data.map(o => o._id);
+    Product.deleteMany({_id: { $in: _ids } }, (err) => {
       if (err) {
         return res.status(500).json({message: 'product 삭제 오류: DB 삭제에 문제가 있습니다.'});
       }
       res.json({
-        message: '삭제완료',
+        data: { message: '삭제완료' },
       });
     });
   }
-  else{
+  else {
+    if (!req.body.data._id) {
+      return res.status(500).json({message: 'product 삭제 오류: _id가 전송되지 않았습니다.'});
+    }
     Product.findOneAndRemove(
       { _id: req.body.data._id },
       (err, result) =>

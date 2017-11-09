@@ -107,24 +107,24 @@ router.delete('/:_id', (req, res) => {
 });
 */
 
+
+// 사진 여러개 삭제
 router.delete('/', (req, res) => {
-
-
-  if (!req.body.data._id) {
-    return res.status(500).json({ message: 'picture 삭제 오류: _id가 전송되지 않았습니다.' });
-  }
-  if(Array.isArray(req.body.data._id)) {
-    // id 배열이 들어오면
-    Picture.deleteMany({_id: req.body.data._id}, (err) => {
+  if(Array.isArray(req.body.data)) {
+    const _ids = req.body.data.map(o => o._id);
+    Picture.deleteMany({_id: { $in: _ids } }, (err) => {
       if (err) {
         return res.status(500).json({message: 'picture 삭제 오류: DB 삭제에 문제가 있습니다.'});
       }
       res.json({
-        message: '삭제완료',
+        data: { message: '삭제완료' },
       });
     });
   }
-  else{
+  else {
+    if (!req.body.data._id) {
+      return res.status(500).json({message: 'picture 삭제 오류: _id가 전송되지 않았습니다.'});
+    }
     Picture.findOneAndRemove(
       { _id: req.body.data._id },
       (err, result) =>

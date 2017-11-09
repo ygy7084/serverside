@@ -51,7 +51,7 @@ router.post('/', (req, res) => {
   return null;
 });
 
-//log 리스트 반환
+//log 리스트 조회
 router.get('/', (req, res) => {
   Log.find({})
     .exec((err, result) => {
@@ -64,7 +64,7 @@ router.get('/', (req, res) => {
     });
 });
 
-//log 반환
+//log 단일 조회
 router.get('/:id', (req, res) => {
   Log.findOne({ _id: req.params.id })
     .lean()
@@ -97,24 +97,24 @@ router.delete('/:_id', (req, res) => {
 });
 */
 
+
+//log 여러개 삭제
 router.delete('/', (req, res) => {
-
-
-  if (!req.body.data._id) {
-    return res.status(500).json({ message: 'log 삭제 오류: _id가 전송되지 않았습니다.' });
-  }
-  if(Array.isArray(req.body.data._id)) {
-    // id 배열이 들어오면
-    Log.deleteMany({_id: req.body.data._id}, (err) => {
+  if(Array.isArray(req.body.data)) {
+    const _ids = req.body.data.map(o => o._id);
+    Log.deleteMany({_id: { $in: _ids } }, (err) => {
       if (err) {
         return res.status(500).json({message: 'log 삭제 오류: DB 삭제에 문제가 있습니다.'});
       }
       res.json({
-        message: '삭제완료',
+        data: { message: '삭제완료' },
       });
     });
   }
-  else{
+  else {
+    if (!req.body.data._id) {
+      return res.status(500).json({message: 'log 삭제 오류: _id가 전송되지 않았습니다.'});
+    }
     Log.findOneAndRemove(
       { _id: req.body.data._id },
       (err, result) =>
