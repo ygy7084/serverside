@@ -30,7 +30,7 @@ router.post('/', (req, res) => {
 
 //계정 리스트 조회
 router.get('/', (req, res) => {
-  Account.find({})
+  Account.find({}).populate('connectedShop')
     .exec((err, result) => {
       if(err){
         return res.status(500).json({ message : "계정 리스트 조회 오류 "});
