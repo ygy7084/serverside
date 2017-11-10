@@ -6,7 +6,7 @@ const Account = new mongoose.Schema({
   password: String,
   connectedShop:
   {
-    _id: {type: Schema.Types.ObjectId, ref: 'shop'},
+    _id: { type: Schema.Types.ObjectId, ref: 'shop' },
     name: String,
   },
   level : String,

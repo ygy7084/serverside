@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const Picture = new Schema({
   fileName: String,
   fileDir: String,
-  shopId : {type: Schema.Types.ObjectId, ref:'shop'},
+  path: String,
+  accountId : {type: Schema.Types.ObjectId, ref:'account'},
   size: String,
 });
 

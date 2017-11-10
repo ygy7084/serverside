@@ -79,7 +79,6 @@ router.put('/', (req, res) => {
     update,
     (err, result) => {
       if(err) {
-        console.log(result);
         return res.status(500).json({ message: "계정 수정 오류 "});
       }
       return res.json({
