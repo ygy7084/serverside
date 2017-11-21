@@ -5,25 +5,13 @@ import {
 } from '../models';
 
 const router = express.Router();
-
-/*
-  name: String,
-  shop: {
-    id: {type: Schema.Types.ObjectId, ref: 'shop'},
-    name: String,
-  },
-  url: String,
- */
-
-
-//nfc 생성
+// nfc 생성
 router.post('/', (req, res) => {
   const nfcTemp = {
     name: req.body.data.name,
     shop: req.body.data.shop,
-    url: req.body.data.url,
+    place: req.body.data.place,
   };
-
   const nfc = new Nfc(nfcTemp);
   nfc.save((err,result) => {
     if(err){
@@ -33,11 +21,9 @@ router.post('/', (req, res) => {
       data: result,
     });
   });
-
   return null;
 });
-
-//nfc 리스트 조회
+// nfc 리스트 조회
 router.get('/', (req, res) => {
   Nfc.find({})
     .exec((err, result) => {
@@ -49,8 +35,7 @@ router.get('/', (req, res) => {
       });
     });
 });
-
-//nfc 단일 조회
+// nfc 단일 조회
 router.get('/:_id', (req, res) => {
   Nfc.findOne({ _id: req.params._id })
     .lean()
@@ -63,17 +48,15 @@ router.get('/:_id', (req, res) => {
       });
     });
 });
-
-//nfc 수정
-router.put('/:_id', (req, res) => {
-  if(!req.params._id){
+// nfc 수정
+router.put('/', (req, res) => {
+  if(!req.body.data._id){
     return res.status(500).json({ message : 'nfc 수정 오류: _id가 전송되지 않았습니다.'});
   }
-
   const properties = [
     'name',
     'shop',
-    'url',
+    'place',
   ];
   const update = { $set: {} };
   for (const property of properties){
@@ -82,7 +65,7 @@ router.put('/:_id', (req, res) => {
     }
   }
   Nfc.findOneAndUpdate(
-    { _id : req.params._id },
+    { _id : req.body.data._id },
     update,
     (err, result) => {
       if(err) {
@@ -95,26 +78,7 @@ router.put('/:_id', (req, res) => {
   );
   return null;
 });
-
-//nfc 삭제
-/*
-router.delete('/:_id', (req, res) => {
-  if (!req.params._id) {
-    return res.status(500).json({ message: 'nfc 삭제 오류: _id가 전송되지 않았습니다.' });
-  }
-  Nfc.findOneAndRemove(
-    { _id: req.params._id },
-    (err, result) =>
-      res.json({
-        data: result,
-      }),
-  );
-  return null;
-});
-*/
-
-
-//nfc 여러개 삭제
+// nfc 삭제
 router.delete('/', (req, res) => {
   if(Array.isArray(req.body.data)) {
     const _ids = req.body.data.map(o => o._id);
@@ -157,6 +121,5 @@ router.delete('/all', (req, res) => {
   );
   return null;
 });
-
 
 export default router;

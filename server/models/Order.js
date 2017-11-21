@@ -9,26 +9,29 @@ const Order = new Schema({
   products:[
     {
       name: String,
-      _id : {type: Schema.Types.ObjectId, ref: 'product'},
+      _id : { type: Schema.Types.ObjectId, ref: 'product' },
       price: Number,
       options: [
         {
           name: String,
           amount: Number,
-        }
-      ]
+        },
+      ],
     }
   ],
-  customer:{
-    _id : {type: Schema.Types.ObjectId, ref:'customer'},
+  customer: {
+    _id : { type: Schema.Types.ObjectId, ref:'customer' },
     name: String,
     phone: String,
   },
-  nfc:{
-    _id : {type: Schema.Types.ObjectId, ref:'nfc'},
+  nfc: {
+    _id : { type: Schema.Types.ObjectId, ref:'nfc' },
     name: String,
   },
-  place: String,
+  place: {
+    _id : { type: Schema.Types.ObjectId, ref:'place' },
+    name: String,
+  },
   orderedWay: String,
   datetime : Date,
   payment: [

@@ -7,7 +7,7 @@ const Customer = new Schema({
   rewards: [
     {
       shop: {
-        _id: {type: Schema.Types.ObjectId, ref: 'shop'},
+        _id: { type: Schema.Types.ObjectId, ref: 'shop' },
         name: String,
       },
       name : String,

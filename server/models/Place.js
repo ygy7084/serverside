@@ -1,11 +1,14 @@
 import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
-const Shop = new Schema({
+const Place = new Schema({
   name: String,
-  phone: String,
+  shop: {
+    _id: { type: Schema.Types.ObjectId, ref: 'shop' },
+    name: String,
+  },
 });
 
-const model = mongoose.model('shop', Shop);
+const model = mongoose.model('place', Place);
 
 export default model;

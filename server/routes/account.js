@@ -5,16 +5,14 @@ import {
 } from '../models';
 
 const router = express.Router();
-
 //계정 생성
 router.post('/', (req, res) => {
   const accountTemp = {
     username: req.body.data.username,
     password: req.body.data.password,
-    connectedShop: req.body.data.connectedShop,
+    shop: req.body.data.shop,
     level: req.body.data.level,
   };
-
   const account = new Account(accountTemp);
   account.save((err,result) => {
     if(err){
@@ -24,10 +22,8 @@ router.post('/', (req, res) => {
       data: result,
     });
   });
-
   return null;
 });
-
 //계정 리스트 조회
 router.get('/', (req, res) => {
   Account.find({})
@@ -44,13 +40,12 @@ router.get('/', (req, res) => {
 
 //계정 단일 조회
 router.get('/:_id', (req, res) => {
-  Account.findOne({ _id: req.params._id }).populate('connectedShop.id')
+  Account.findOne({ _id: req.params._id }).populate('shop.id')
     .lean()
     .exec((err, result) => {
       if(err) {
         return res.status(500).json({ message: '계정 조회 오류'});
       }
-      console.log(result);
       return res.json({
         data: result,
       });
@@ -65,7 +60,7 @@ router.put('/', (req, res) => {
   const properties = [
     'username',
     'password',
-    'connectedShop',
+    'shop',
     'level',
   ];
   const update = { $set: {} };

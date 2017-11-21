@@ -207,7 +207,7 @@ router.get('/:_id', (req, res) => {
 });
 
 //고객 수정
-router.put('/:_id', (req, res) => {
+router.put('/', (req, res) => {
   if(!req.body.data._id){
     return res.status(500).json({ message : '고객 수정 오류: _id가 전송되지 않았습니다.'});
   }

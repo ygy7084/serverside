@@ -5,34 +5,6 @@ import {
 } from '../models';
 
 const router = express.Router();
-/*
-  name: String,
-  pictures: [String],
-  price: Number,
-  description: String,
-  shop : {
-    id : { type: Schema.Types.ObjectId, ref:'shop' },
-    name : String
-  },
-  nutrients: [
-    {
-      name: String,
-      value: String,
-    }
-  ],
-  options: [
-    {
-      name: String,
-      selections: [
-        {
-          name: String,
-          price: Number,
-          canBeMany: Boolean,
-        }
-      ],
-    }
-  ],
- */
 //상품 생성
 router.post('/', (req, res) => {
   const productTemp = {
@@ -44,7 +16,7 @@ router.post('/', (req, res) => {
     nutrients: req.body.data.nutrients,
     options : req.body.data.options,
   };
-
+  console.log(productTemp);
   const product = new Product(productTemp);
   product.save((err,result) => {
     if(err){
@@ -54,8 +26,6 @@ router.post('/', (req, res) => {
       data: result,
     });
   });
-
-  return null;
 });
 
 //상품 리스트 반환
@@ -70,7 +40,6 @@ router.get('/', (req, res) => {
       });
     });
 });
-
 //상품 반환
 router.get('/:_id', (req, res) => {
   Product.findOne({ _id: req.params._id })
@@ -84,9 +53,8 @@ router.get('/:_id', (req, res) => {
       });
     });
 });
-
 //상품 수정
-router.put('/:_id', (req, res) => {
+router.put('/', (req, res) => {
   if(!req.body.data._id){
     return res.status(500).json({ message : '상품 수정 오류: _id가 전송되지 않았습니다.'});
   }
@@ -119,22 +87,6 @@ router.put('/:_id', (req, res) => {
   return null;
 });
 
-//상품 삭제
-/*
-router.delete('/:_id', (req, res) => {
-  if (!req.params._id) {
-    return res.status(500).json({ message: '상품 삭제 오류: _id가 전송되지 않았습니다.' });
-  }
-  Product.findOneAndRemove(
-    { _id: req.params._id },
-    (err, result) =>
-      res.json({
-        data: result,
-      }),
-  );
-  return null;
-});
-*/
 // 상품 여러개 삭제
 router.delete('/', (req, res) => {
   if(Array.isArray(req.body.data)) {
@@ -178,6 +130,5 @@ router.delete('/all', (req, res) => {
   );
   return null;
 });
-
 
 export default router;

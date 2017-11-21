@@ -7,7 +7,6 @@ const router = express.Router();
 const LocalStrategy = passportLocal.Strategy;
 
 passport.use('account',new LocalStrategy((username, password, done) => {
-  console.log(username, password);
   Account.findOne({ username }, (err, account) => {
     if (err) { return done(err); }
     if (!account) {
@@ -36,11 +35,7 @@ passport.deserializeUser((obj, cb) => {
 
 // [START authorize]
 router.post('/auth/login', (req, res, next) => {
-  console.log(req.body.data);
   passport.authenticate('account', (err, account, info) => {
-    console.log(err);
-    console.log(account);
-    console.log(info);
     if (err) res.status(500).json(err);
     if (!account) { return res.status(400).json(info.message); }
     req.logIn(account, (err) => {
@@ -61,7 +56,6 @@ router.get('/auth/logout', (req, res) => {
 });
 
 router.get('/auth', (req, res) => {
-  console.log(req.user);
   // If user is not stored in session, it will return undefined.
   if (!req.user) {
     return res.status(400).json({ message: '로그인하십시요.', behavior: 'redirectToLogin' });
