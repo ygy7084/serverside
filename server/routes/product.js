@@ -9,14 +9,15 @@ const router = express.Router();
 router.post('/', (req, res) => {
   const productTemp = {
     name: req.body.data.name,
+    category: req.body.data.category,
     pictures: req.body.data.pictures,
     price: req.body.data.price,
+    subDescription: req.body.data.subDescription,
     description: req.body.data.description,
     shop: req.body.data.shop,
     nutrients: req.body.data.nutrients,
     options : req.body.data.options,
   };
-  console.log(productTemp);
   const product = new Product(productTemp);
   product.save((err,result) => {
     if(err){
@@ -62,8 +63,10 @@ router.put('/', (req, res) => {
   const properties = [
     'name',
     'price',
+    'category',
     'pictures',
     'shop',
+    'subDescription',
     'description',
   ];
   const update = { $set: {} };
@@ -93,7 +96,7 @@ router.delete('/', (req, res) => {
     const _ids = req.body.data.map(o => o._id);
     Product.deleteMany({_id: { $in: _ids } }, (err) => {
       if (err) {
-        return res.status(500).json({message: 'product 삭제 오류: DB 삭제에 문제가 있습니다.'});
+        return res.status(500).json({ message: 'product 삭제 오류: DB 삭제에 문제가 있습니다.' });
       }
       res.json({
         data: { message: '삭제완료' },
@@ -102,7 +105,7 @@ router.delete('/', (req, res) => {
   }
   else {
     if (!req.body.data._id) {
-      return res.status(500).json({message: 'product 삭제 오류: _id가 전송되지 않았습니다.'});
+      return res.status(500).json({ message: 'product 삭제 오류: _id가 전송되지 않았습니다.' });
     }
     Product.findOneAndRemove(
       { _id: req.body.data._id },

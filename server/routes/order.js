@@ -35,6 +35,7 @@ router.post('/', (req, res) => {
 //order 리스트 조회
 router.get('/', (req, res) => {
   Order.find({})
+    .sort({ datetime: -1 })
     .exec((err, result) => {
       if(err){
         return res.status(500).json({ message : "주문 리스트 조회 오류 "});

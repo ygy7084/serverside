@@ -5,7 +5,9 @@ const Product = new Schema({
   name: String,
   pictures: [String],
   price: Number,
+  subDescription: String,
   description: String,
+  category: String,
   shop : {
     _id : { type: Schema.Types.ObjectId, ref:'shop' },
     name : String
