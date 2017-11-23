@@ -6,7 +6,7 @@ import Shop from './Shop';
 import Order from './Order';
 import Nfc from './Nfc';
 import Log from './Log';
-import Picture from './Picture'
+import Picture from './Picture';
 import Place from './Place';
 
 export{
