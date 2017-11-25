@@ -25,8 +25,6 @@ const port = configure.PORT;
 // 정적 파일 라우트 (CORS 밑에 두면 안된다 - 일반적으로 브라우저로 조회하기 때문)
 app.use('/', express.static(path.join(__dirname, './../public')));
 
-
-
 // 몽고디비 연결 설정
 const db = mongoose.connection;
 mongoose.connect(configure.MONGO_URL, {

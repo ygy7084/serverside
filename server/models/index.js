@@ -6,8 +6,9 @@ import Shop from './Shop';
 import Order from './Order';
 import Nfc from './Nfc';
 import Log from './Log';
-import Picture from './Picture'
+import Picture from './Picture';
 import Place from './Place';
+import Menu from './Menu';
 
 export{
   Account,
@@ -20,4 +21,5 @@ export{
   Log,
   Picture,
   Place,
+  Menu,
 };
