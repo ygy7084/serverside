@@ -66,6 +66,7 @@ router.put('/', (req, res) => {
     'category',
     'pictures',
     'shop',
+    'options',
     'subDescription',
     'description',
   ];
