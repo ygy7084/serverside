@@ -10,6 +10,7 @@ import nfc from './nfc';
 import log from './log';
 import order from './order';
 import place from './place';
+import menu from './menu';
 
 const router = express.Router();
 
@@ -23,5 +24,6 @@ router.use('/nfc',nfc);
 router.use('/log',log);
 router.use('/order', order);
 router.use('/place', place);
+router.use('/menu', menu);
 
 export default router;
