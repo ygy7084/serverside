@@ -6,7 +6,6 @@ import {
 
 const router = express.Router();
 
-
 //메뉴판 생성
 router.post('/', (req, res) => {
   const menuTemp = {
@@ -26,7 +25,6 @@ router.post('/', (req, res) => {
 
   return null;
 });
-
 //메뉴판 조회(상점별)
 router.post('/getMenu', (req, res) => {
   console.log('getMenu 상점별 조회 post 요청 들어옴');
@@ -41,13 +39,11 @@ router.post('/getMenu', (req, res) => {
       });
     });
 });
-
 //메뉴판 수정
 router.put('/', (req, res) => {
   if(!req.body.data._id){
     return res.status(500).json({ message : '메뉴판 수정 오류: _id가 전송되지 않았습니다.'});
   }
-
   const properties = [
     'shop',
     'products',
@@ -72,8 +68,6 @@ router.put('/', (req, res) => {
   );
   return null;
 });
-
-
 // 메뉴판 상점별 삭제
 router.delete('/', (req, res) => {
   Menu.deleteMany(
@@ -89,6 +83,4 @@ router.delete('/', (req, res) => {
   );
   return null;
 });
-
-
 export default router;
