@@ -25,6 +25,5 @@ router.use('/log',log);
 router.use('/order', order);
 router.use('/place', place);
 router.use('/menu', menu);
-router.use('/test', test);
 
 export default router;
