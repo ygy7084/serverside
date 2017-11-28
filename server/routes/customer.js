@@ -19,7 +19,6 @@ const router = express.Router();
     }
   ]
  */
-
 //고객 생성
 router.post('/', (req, res) => {
   const customerTemp = {
@@ -39,7 +38,6 @@ router.post('/', (req, res) => {
   });
   return null;
 });
-
 /*
 router.post('/PointSave', (req, res) => {
   //let phone = req.body.data.phone;
