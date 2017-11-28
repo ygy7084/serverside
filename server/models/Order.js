@@ -11,14 +11,21 @@ const Order = new Schema({
       name: String,
       _id : { type: Schema.Types.ObjectId, ref: 'product' },
       price: Number,
+      number: Number,
       options: [
         {
           name: String,
-          amount: Number,
+          selections: [
+            {
+              name: String,
+              price: Number,
+            },
+          ],
         },
       ],
     }
   ],
+  wholePrice: Number,
   customer: {
     _id : { type: Schema.Types.ObjectId, ref:'customer' },
     name: String,
