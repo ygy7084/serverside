@@ -21,12 +21,18 @@ const router = express.Router();
  */
 //고객 생성
 router.post('/', (req, res) => {
+  let { phone, name, rewards } = req.body.data;
+  if (!phone || phone === '') {
+    phone = undefined;
+  }
+  if (!name || name === '') {
+    name = undefined;
+  }
   const customerTemp = {
-    phone: req.body.data.phone,
-    name : req.body.data.name,
-    rewards : req.body.data.rewards,
+    phone,
+    name,
+    rewards,
   };
-
   const customer = new Customer(customerTemp);
   customer.save((err,result) => {
     if(err){
@@ -209,15 +215,27 @@ router.put('/', (req, res) => {
   if(!req.body.data._id){
     return res.status(500).json({ message : '고객 수정 오류: _id가 전송되지 않았습니다.'});
   }
-
   const properties = [
     'phone',
     'name',
   ];
-  const update = { $set: {} };
+  const update = {
+    $set: {},
+    $unset: {},
+  };
   for (const property of properties){
     if(Object.prototype.hasOwnProperty.call(req.body.data, property)){
-      update.$set[property] = req.body.data[property];
+      if (req.body.data[property] === '') {
+        if (!'$unset' in update) {
+          update.$unset = {};
+        }
+        update.$unset[property] = '';
+      } else {
+        if (!'$set' in update) {
+          update.$set = {};
+        }
+        update.$set[property] = req.body.data[property];
+      }
     }
   }
   Customer.findOneAndUpdate(
@@ -225,6 +243,7 @@ router.put('/', (req, res) => {
     update,
     (err, result) => {
       if(err) {
+        console.error(err);
         return res.status(500).json({ message: "고객 수정 오류 "});
       }
       return res.json({
